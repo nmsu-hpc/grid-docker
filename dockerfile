@@ -5,11 +5,20 @@ FROM centos:7
 WORKDIR /tmp
 
 # Install HTCONDOR repo and install condor and vim
-RUN curl -O https://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor
-RUN rpm --import RPM-GPG-KEY-HTCondor
-RUN cd /etc/yum.repos.d
-RUN curl -O https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo
-RUN yum install -y condor-all vim
+RUN set -ex \
+        && mkdir -p /var/run/lock \
+        && yum makecache fast \
+        && yum -y install wget vim \
+        && wget -qO /etc/yum.repos.d/htcondor-stable-rhel7.repo https://research.cs.wisc.edu/htcondor/yum/repo.d/htcondor-stable-rhel7.repo \
+        && wget -qO /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor \
+        && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor \
+        && yum -y remove wget \
+        && yum -y install condor-all \
+        && yum clean all
+
+COPY condor_config /etc/condor/condor_config
+
+RUN /usr/sbin/condor_master -f &
 
 # Make port 9618 availble to the outside world
 EXPOSE 9618
