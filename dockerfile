@@ -17,6 +17,7 @@ RUN set -ex \
         && yum clean all
 
 COPY condor_config /etc/condor/condor_config
+COPY condor_config.local /etc/condor/condor_config.local
 
 RUN /usr/sbin/condor_master -f &
 
