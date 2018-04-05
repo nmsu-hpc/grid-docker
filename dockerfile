@@ -13,14 +13,15 @@ RUN set -ex \
         && wget -qO /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor http://research.cs.wisc.edu/htcondor/yum/RPM-GPG-KEY-HTCondor \
         && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-HTCondor \
         && yum -y remove wget \
-        && yum -y install condor-all \
+        && yum -y install condor python-devel python-pip \
         && yum clean all
-
+CMD ["/tmp/ip_script.sh"]
 COPY condor_config /etc/condor/condor_config
-COPY condor_config.local /etc/condor/condor_config.local
+COPY condor-wrapper.sh /tmp/condor-wrapper.sh
 
-RUN /usr/sbin/condor_master -f &
+ENTRYPOINT "./condor-wrapper.sh"  && /bin/bash
 
 # Make port 9618 availble to the outside world
 EXPOSE 9618
+
 
