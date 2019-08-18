@@ -78,7 +78,7 @@ JAVA_CLASSPATH_DEFAULT = $(SHARE) $(SHARE)/scimark2lib.jar .
 
 ##  What machine is your central manager?
 
-CONDOR_HOST = aggie-grid.nmsu.edu
+CONDOR_HOST = aggie-grid-h1.nmsu.edu
 NET_REMAP_ENABLE = TRUE
 
 ##  This macro determines what daemons the condor_master will start and keep its watchful eyes on.
